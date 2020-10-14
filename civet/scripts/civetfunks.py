@@ -33,6 +33,7 @@ def get_defaults():
                     "no_temp":True,
                     "datadir":"civet-cat",
                     "input_column":"name",
+                    "patient_id_col":False,
                     "data_column":"central_sample_id",
                     "database_sample_date_column":"sample_date",
                     "sample_date_column":"sample_date",
@@ -69,7 +70,8 @@ def get_defaults():
                     "protect": False,
                     "output_prefix":"civet",
                     "safety_level":1,
-                    "reinfection":False
+                    "reinfection":False,
+                    "report_template":"civet_template.pmd"
                     }
     return default_dict
 
@@ -123,7 +125,8 @@ def get_reinfection_defaults():
                     "protect": False,
                     "output_prefix":"civet_reinfection",
                     "safety_level":0,
-                    "reinfection":True
+                    "reinfection":True,
+                    "report_template":"reinfection_template.pmd"
                     }
     return default_dict
 
@@ -164,7 +167,12 @@ def get_package_data(thisdir,config):
     config["HB_translations"] = spatial_translations_1
     config["PC_translations"] = spatial_translations_2
 
-    report_template = os.path.join(thisdir, 'scripts','civet_template.pmd')
+
+def template_config(thisdir, config, default_dict, args):
+
+    template = qcfunk.check_arg_config_default("report_template",args.report_template, config, default_dict)
+
+    report_template = os.path.join(thisdir,'scripts',template)
 
     if not os.path.exists(report_template):
         sys.stderr.write(qcfunk.cyan(f'Error: cannot find report_template at {report_template}\n'))

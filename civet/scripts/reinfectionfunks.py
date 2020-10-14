@@ -1,5 +1,6 @@
 import csv
 import os
+from collections import defaultdict
 
 from reportfunk.funks import io_functions as qcfunk
 
@@ -58,5 +59,24 @@ def reinfection_args_to_config(args, config, defaultdict):
 
     patient_id_col = qcfunk.check_arg_config_default("patient_id_col", args.patient_id_col, config, defaultdict)
     config["patient_id_col"] = patient_id_col
+
+def sort_into_patients(query_dict):
+
+    patient_to_taxa = defaultdict(list)
+    patient_to_tree = defaultdict(list)
+    patient_list = set()
+    
+    for tax in query_dict.values():
+        
+        patient = tax.attribute_dict["patient"]
+        patient_to_taxa[patient].append(tax)
+        patient_to_tree[patient].append(tax.tree)
+        patient_list.add(patient)
+
+    patient_list = list(patient_list)
+
+    return patient, patient_to_taxa, patient_to_tree
+
+
     
     

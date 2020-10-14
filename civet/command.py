@@ -92,6 +92,7 @@ def main(sysargs = sys.argv[1:]):
     reinfection_group.add_argument("--patient-id-col", action="store", dest='patient_id_col', help="Column containing patient ID")
 
     misc_group = parser.add_argument_group('misc options')
+    misc_group.add_argument("--report-template", action='store', dest="report_template", help="Template to base the report on")
     misc_group.add_argument("--safety-level", action="store", type=int, dest="safety_level",help="Level of anonymisation for users. Options: 0 (no anonymity), 1 (no COGIDs on background data), 2 (no adm2 on data). Default: 1")
     misc_group.add_argument('-b','--launch-browser', action="store_true",help="Optionally launch md viewer in the browser using grip",dest="launch_browser")
     misc_group.add_argument('-c','--generate-config',dest="generate_config",action="store_true",help="Rather than running a civet report, just generate a config file based on the command line arguments provided")
@@ -246,6 +247,8 @@ def main(sysargs = sys.argv[1:]):
     """
     Report options and args added to config, seq header file retrieved
     """
+    cfunk.template_config(thisdir, config, default_dict, args)
+
     # check args, config, defaultdict for report group options
     cfunk.report_group_to_config(args,config,default_dict)
 
