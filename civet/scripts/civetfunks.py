@@ -54,13 +54,12 @@ def get_defaults():
                     "launch_browser":False,
                     "node_summary":"country",
                     "date_window":7,
-                    "colour_by":"adm1=viridis",
+                    "colour_by":"adm1=default",
                     "label_fields":False,
                     "date_fields":False,
                     "no_snipit":False,
                     "include_snp_table":False,
                     "include_bars":False,
-                    "cog_report":False,
                     "omit_appendix":False,
                     "table_fields":["sample_date", "uk_lineage", "lineage", "phylotype"],
                     "threads":1,
@@ -69,7 +68,62 @@ def get_defaults():
                     "trim_end":29674,
                     "protect": False,
                     "output_prefix":"civet",
-                    "safety_level":1
+                    "safety_level":1,
+                    "reinfection":False
+                    }
+    return default_dict
+
+def get_reinfection_defaults():
+    default_dict = {
+                    "title": "# Reinfection investigation",
+                    "outbreak_id": "",
+                    "report_date": today,# date investigation was opened
+                    "authors": "", # List of authors, affiliations and contact details
+                    "description": "",
+                    "conclusions": "",
+                    "max_ambiguity":0.5,
+                    "min_length":10000,
+                    "no_temp":True,
+                    "datadir":"civet-cat",
+                    "input_column":"sequence_id",
+                    "patient_id_col":"patient_id",
+                    "data_column":"central_sample_id",
+                    "database_sample_date_column":"sample_date",
+                    "sample_date_column":"sample_date",
+                    "display_name":False,
+                    "distance":2,
+                    "up_distance":False,
+                    "down_distance":False,
+                    "collapse_threshold":2,
+                    "sequencing_centre":"DEFAULT",
+                    "tree_fields":"group",
+                    "local_lineages":False,
+                    "map_sequences":False,
+                    "map_info":False,
+                    "input_crs":False,
+                    "colour_map_by":False,
+                    "date_restriction":False,
+                    "date_range_start":False,
+                    "date_range_end":False,
+                    "launch_browser":False,
+                    "node_summary":"adm2", #for uk seqs here, and say country if outside of UK
+                    "date_window":7,
+                    "colour_by":"group=Paired",
+                    "label_fields":"sequence_id,patient_id,sample_date",
+                    "date_fields":"sample_date",
+                    "no_snipit":False,
+                    "include_snp_table":True,
+                    "include_bars":False,
+                    "omit_appendix":False,
+                    "table_fields":["patient_id","sample_date", "phylotype", "uk_lineage"],
+                    "threads":1,
+                    "force":True,
+                    "trim_start":265,   # where to pad to using datafunk
+                    "trim_end":29674,
+                    "protect": False,
+                    "output_prefix":"civet_reinfection",
+                    "safety_level":0,
+                    "reinfection":True
                     }
     return default_dict
 

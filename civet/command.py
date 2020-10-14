@@ -20,6 +20,7 @@ from reportfunk.funks import report_functions as rfunk
 from reportfunk.funks import custom_logger as custom_logger
 from reportfunk.funks import log_handler_handle as lh
 import civetfunks as cfunk
+import reinfectionfunks as reinfunks
 
 thisdir = os.path.abspath(os.path.dirname(__file__))
 cwd = os.getcwd()
@@ -86,6 +87,10 @@ def main(sysargs = sys.argv[1:]):
     map_group.add_argument("--input-crs", required=False, dest="input_crs", help="Coordinate reference system for sequence coordinates")
     map_group.add_argument("--colour-map-by", required=False, dest="colour_map_by", help="Column to colour mapped sequences by")
     
+    reinfection_group = parser.add_argument_group("reinfection civet options")
+    reinfection_group.add_argument("--reinfection", action="store_true", dest="reinfection",help="Run reinfection analysis")
+    reinfection_group.add_argument("--patient-id-col", action="store", dest='patient_id_col', help="Column containing patient ID")
+
     misc_group = parser.add_argument_group('misc options')
     misc_group.add_argument("--safety-level", action="store", type=int, dest="safety_level",help="Level of anonymisation for users. Options: 0 (no anonymity), 1 (no COGIDs on background data), 2 (no adm2 on data). Default: 1")
     misc_group.add_argument('-b','--launch-browser', action="store_true",help="Optionally launch md viewer in the browser using grip",dest="launch_browser")
@@ -117,8 +122,10 @@ def main(sysargs = sys.argv[1:]):
     """
     Initialising dicts
     """
+
     # create the config dict to pass through to the snakemake file
     config = {}
+
     # get the default values from civetfunks
     default_dict = cfunk.get_defaults()
 
@@ -129,12 +136,21 @@ def main(sysargs = sys.argv[1:]):
     If there's an input fasta file- add to the config dict
 
     """
+
     # find the query csv, or string of ids, or config file
     query,configfile = qcfunk.type_input_file(args.input,cwd,config)
 
     # if a yaml file is detected, add everything in it to the config dict
     if configfile:
         config = qcfunk.parse_yaml_file(configfile, config)
+    
+    #if reinfection, overwrite the default_dict with new defaults and add the new arguments to config
+    if args.reinfection or ("reinfection" in config and config["reinfection"]):
+        default_dict = cfunk.get_reinfection_defaults()
+        reinfunks.reinfection_args_to_config(args,config, default_dict)
+    
+    reinfection = qcfunk.check_arg_config_default("reinfection", args.reinfection, config, default_dict)
+    config["reinfection"] = reinfection
     
     """
     Get outdir, tempdir and data dir. 
@@ -195,8 +211,12 @@ def main(sysargs = sys.argv[1:]):
     # check query exists or add ids to temp query file
     qcfunk.check_query_file(query, cwd, config)
 
+    if config["reinfection"]:
+        reinfunks.configure_input_query(config)
+
     # check if metadata has the right columns, background_metadata_header added to config
     qcfunk.check_query_for_input_column(config,default_dict)
+
 
     """
     Input fasta file 
