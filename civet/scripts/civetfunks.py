@@ -116,7 +116,7 @@ def get_reinfection_defaults():
                     "no_snipit":False,
                     "include_snp_table":True,
                     "include_bars":False,
-                    "omit_appendix":False,
+                    "omit_appendix":True,
                     "table_fields":["patient_id","sample_date", "phylotype", "uk_lineage"],
                     "threads":1,
                     "force":True,
