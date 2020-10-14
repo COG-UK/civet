@@ -8,9 +8,9 @@ def configure_input_query(config):
 
     query_metadata = config["query"]
     patient_id_col = config["patient_id_col"]
-    path_to_tempdir = config["tempdir"]
+    path_to_dir = config["outdir"]
 
-    new_query = os.path.join(path_to_tempdir, "query_with_groups.csv") #this is not actually where we want it - tempdir maybe?
+    new_query = os.path.join(path_to_dir, "query_with_groups.csv") #this is not actually where we want it - tempdir maybe?
 
     patient_to_group = {}
     count = 1
