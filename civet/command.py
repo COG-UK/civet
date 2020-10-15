@@ -215,7 +215,7 @@ def main(sysargs = sys.argv[1:]):
     #prep files for reinfection analysis
     if config["reinfection"]:
         reinfunks.configure_input_query(config)
-        reinfunks.make_patient_files(config)
+        # reinfunks.make_patient_files(config)
 
     # check if metadata has the right columns, background_metadata_header added to config
     qcfunk.check_query_for_input_column(config,default_dict)

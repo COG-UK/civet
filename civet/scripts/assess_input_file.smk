@@ -10,6 +10,7 @@ from reportfunk.funks import custom_logger as custom_logger
 
 from reportfunk.funks import io_functions as qcfunk
 import civetfunks as cfunk
+import reinfectionfunks as reinfunk
 
 output_prefix = config["output_prefix"]
 
@@ -216,13 +217,7 @@ rule find_snps:
         local_str = ",".join(local_trees) #to pass to snakemake pipeline
         
         if config["reinfection"]:
-            patient_set = set()
-            with open(input.query) as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    patient_set.add(row[config['patient_id_col']])
-
-            patient_str = ",".join(list(patient_set))
+            patient_str = reinfunk.make_patient_files(config)
         
         if config["from_metadata"] or config["no_snipit"]:
             shell("touch {output.genome_graphs} ")

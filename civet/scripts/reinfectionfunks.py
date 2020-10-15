@@ -58,7 +58,7 @@ def configure_input_query(config):
 
 def make_patient_files(config):
 
-    path_to_dir = config["outdir"]
+    path_to_dir = config["tempdir"]
     query = config["query"]
     name_col = config["input_column"]
     patient_col = config["patient_id_col"]
@@ -86,6 +86,11 @@ def make_patient_files(config):
             fw.write(l + "\n")
         fw.close()
 
+    patient_list = list(patient_dict.keys())
+    patient_str = ",".join(patient_list)
+
+    return patient_str
+
 def reinfection_args_to_config(args, config, defaultdict):
 
     patient_id_col = qcfunk.check_arg_config_default("patient_id_col", args.patient_id_col, config, defaultdict)
@@ -103,9 +108,6 @@ def sort_into_patients(query_dict):
         patient_to_taxa[patient].append(tax)
         patient_to_tree[patient].add(tax.tree)
         patient_list.add(patient)
-
-
-    patient_list = list(patient_list)
 
     return patient_list, patient_to_taxa, patient_to_tree
 

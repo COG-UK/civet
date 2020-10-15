@@ -3,7 +3,7 @@ from Bio import SeqIO
 import csv
 import collections
 
-config["patient_stems"] = str(config["patient_str"]).replace("(","").replace(")","").split(",")
+config["patient_stems"] = config["patient_str"].split(",")
 
 rule all:
     input:
