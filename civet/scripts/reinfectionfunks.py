@@ -31,7 +31,6 @@ def configure_input_query(config):
                 patient_to_group[patient] = count
                 count += 1
 
-    
     with open(query_metadata) as csv_input:
         with open(new_query, "w") as csv_output:
             reader = csv.DictReader(csv_input)
@@ -54,6 +53,31 @@ def configure_input_query(config):
                 writer.writerow(row)
 
     config["query"] = new_query
+
+def make_patient_files(config):
+
+    path_to_dir = config["tempdir"]
+    query = config["query"]
+    name_col = config["input_column"]
+    patient_col = config["patient_id_col"]
+
+    patient_dict = defaultdict(list)
+
+    with open(query) as f:
+        reader = csv.DictReader(f)
+        data = [r for r in reader]
+        for row in data:
+            name = row[name_col]
+            patient = row[patient_col]
+
+            patient_dict[patient].append(name)
+
+    for k in patient_dict.keys():
+        fw = open(os.path.join(path_to_dir,f"{k}_taxa.txt"), 'w')
+        fw.write('name')
+        for l in patient_dict[k]:
+            fw.write(l + "\n")
+        fw.close()
 
 def reinfection_args_to_config(args, config, defaultdict):
 

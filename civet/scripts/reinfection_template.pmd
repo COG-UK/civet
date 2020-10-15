@@ -161,6 +161,7 @@ for trait, colour_dict in colour_dict_dict.items():
 
 
 
+
 ```python, name="time_plot", echo=False, results='raw', include=False
 if dates_present:
     count = 0
