@@ -181,7 +181,7 @@ if dates_present:
 ```python, name="show_trees", echo=False, results='raw'
 for patient,trees in patient_to_tree.items():
     print(f"> **Patient {patient}**\n")
-    print(f"There are {len(trees)} trees for this patient's sequences." )
+    print(f"Number of trees: {len(trees)}" )
     for tree in trees:
         tree_name = tree
         i = tree.split("_")[-1]
@@ -197,6 +197,11 @@ for patient,trees in patient_to_tree.items():
 
     if not no_snipit:
         print(f"![]({figdir}/genome_graph_{patient}.png)")
+
+    patient_df = reinfunk.make_summary_table(patient, patient_to_taxa, tree_to_all_tip, full_tax_dict)
+    print(patient_df.to_markdown())
+
+    print("\n")
 
        
 if too_tall_trees != []:

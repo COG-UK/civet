@@ -195,7 +195,8 @@ rule process_catchments:
 rule find_snps:
     input:
         tree_summary = os.path.join(config["outdir"],"local_trees","collapse_report.txt"),
-        snakefile = os.path.join(workflow.current_basedir,"find_snps.smk"),
+        snakefile_tree = os.path.join(workflow.current_basedir,"find_snps.smk"),
+        snakefile_patient =  os.path.join(workflow.current_basedir,"find_patient_snps.smk"),
         query_seqs = rules.get_closest_cog.output.aligned_query, #datafunk-processed seqs
         background_seqs = config["background_seqs"],
         outgroup_fasta = config["outgroup_fasta"],
@@ -214,15 +215,42 @@ rule find_snps:
                     local_trees.append(file_stem)
         local_str = ",".join(local_trees) #to pass to snakemake pipeline
         
+        if config["reinfection"]:
+            patient_set = set()
+            with open(input.query) as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    patient_set.add(row[config['patient_id_col']])
+
+            patient_str = ",".join(list(patient_set))
+        
         if config["from_metadata"] or config["no_snipit"]:
             shell("touch {output.genome_graphs} ")
-        else:
-            shell("snakemake --nolock --snakefile {input.snakefile:q} "
+        elif not config["reinfection"]:
+            shell("snakemake --nolock --snakefile {input.snakefile_tree:q} "
                                 "{config[force]} "
                                 "{config[log_string]} "
                                 "--directory {config[tempdir]:q} "
                                 "--config "
                                 f"catchment_str={local_str} "
+                                "outdir={config[outdir]:q} "
+                                "tempdir={config[tempdir]:q} "
+                                "outgroup_fasta={input.outgroup_fasta:q} "
+                                "aligned_query_seqs={input.query_seqs:q} "
+                                "background_seqs={input.background_seqs:q} "
+                                "query={input.query:q} "
+                                "combined_metadata={input.combined_metadata:q} "
+                                "display_name={config[display_name]:q} "
+                                "input_column={config[input_column]:q} "
+                                "data_column={config[data_column]:q} "
+                                "--cores {workflow.cores} ")
+        elif config["reinfection"]:
+            shell("snakemake --nolock --snakefile {input.snakefile_patient:q} "
+                                "{config[force]} "
+                                "{config[log_string]} "
+                                "--directory {config[tempdir]:q} "
+                                "--config "
+                                f"patient_str={patient_str} "
                                 "outdir={config[outdir]:q} "
                                 "tempdir={config[tempdir]:q} "
                                 "outgroup_fasta={input.outgroup_fasta:q} "

@@ -29,6 +29,7 @@ setup(name='civet',
       "civet/scripts/reinfection_template.pmd",
       "civet/scripts/mapping.py",
       "civet/scripts/find_snps.smk",
+      "civet/scripts/find_patient_snps.smk",
       "civet/scripts/reinfectionfunks.py"],
       package_data={"civet":["data/*","data/headers/*","data/mapping_files/*","data/vega_templates/*"]},
       install_requires=[
