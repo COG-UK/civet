@@ -1,8 +1,7 @@
-report: Outbreak # the report template to use
+report: reinfection # the report template to use
 
-description: > # Free-text description that will be inserted at the top of the report - can use markdown for formatting. Please use \n to indicate new lines.
-  ### Background \n
-  This report explores possible instances of reinfection within the query dataset. It is designed to assess whether the paired sequences are the same infection, or whether they are two separate samples of the background diversity of the virus.\n
+# description: > # Free-text description that will be inserted at the top of the report - can use markdown for formatting. Please use \n to indicate new lines.
+  
 reinfection: True
 # tree_fields: adm1, group
 # colour_by: adm1, group
@@ -18,7 +17,7 @@ reinfection: True
 # # threshold: 1
 # #from-metadata: ["adm2=Edinburgh","sample_date=2020-05-01:2020-05-15"]
 # # date-fields: ["sample_date", "date_2", "date_3"]
-query: test_for_reinfection_onepair.csv
+query: test_for_reinfection.csv
 fasta: reinfection_test.fasta
 # include_bars: True
 # map_sequences: True
