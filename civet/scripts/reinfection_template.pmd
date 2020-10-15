@@ -114,6 +114,8 @@ prep_data.analyse_inputs(inputs)
 
 print("\n")
 
+print(str(len(patient_list)) + " patients were present in this dataset.")
+
 print(str(full_query_count) + " queries (" + str(cog_number) + " matched to COG-UK database).")
 print(str(not_in_cog_number) + " additional sequences provided.")
 print(str(not_found_in_climb) + " were not found in the phylogeny or in the larger background database and a sequence was not provided.")
@@ -165,42 +167,38 @@ for trait, colour_dict in colour_dict_dict.items():
 ```python, name="time_plot", echo=False, results='raw', include=False
 if dates_present:
     count = 0
-    tree_to_time_series = {}
-    for tree in tree_order:
+    patient_to_time_series = {}
+    for patient in patient_list:
         count += 1
-        lookup = f"{tree_name_stem}_{tree}"
-        tips = tree_to_tip[lookup]
+        lookup = f"{patient}"
+        tips = patient_to_taxa[lookup]
         if len(tips) > 1:
             time_func.plot_time_series(tips, query_dict, max_overall_date, min_overall_date, date_fields, label_fields, lookup, svg_figdir, safety_level = safety_level)
-            tree_to_time_series[lookup] = count
+            patient_to_time_series[lookup] = count
+
 ```
 
 ```python, name="show_trees", echo=False, results='raw'
-for i in range(1,overall_tree_number+1):
-    tree_name = "Tree " + str(i)
-    lookup = f"{tree_name_stem}_{i}"
-    print(f"> **Tree {i}** | ")
-    if len(tree_to_tip[lookup]) == 1:
-        print(f"1 sequence of interest")
-    else:
-        print(f"{len(tree_to_tip[lookup])} sequences of interest")
-    print("   ")
-    
-    if lookup not in too_tall_trees:
-        print(f"![]({figdir}/{name_stem}_make_trees_{i}.png)")
+for patient,trees in patient_to_tree.items():
+    print(f"> **Patient {patient}**\n")
+    print(f"There are {len(trees)} trees for this patient's sequences." )
+    for tree in trees:
+        tree_name = tree
+        i = tree.split("_")[-1]
+        
+        if lookup not in too_tall_trees:
+            print(f"![]({figdir}/{name_stem}_make_trees_{i}.png)")
 
-        print(f'<img src="{figdir}/{name_stem}_make_legend_1.png" alt="drawing" style="width:100%;"/>')
-        print("\n")
+            print(f'<img src="{figdir}/{name_stem}_make_legend_1.png" alt="drawing" style="width:100%;"/>')
+            print("\n")
 
-        if dates_present and lookup in tree_to_time_series.keys():
-            print("![](" + figdir + "/" + name_stem + "_time_plot_" + str(tree_to_time_series[lookup]) + ".png)")
+    if dates_present and patient in patient_to_time_series.keys():
+        print("![](" + figdir + "/" + name_stem + "_time_plot_" + str(patient_to_time_series[patient]) + ".png)")
 
-        if not no_snipit:
-            print(f"![]({figdir}/genome_graph_{lookup}.png)")
+    if not no_snipit:
+        print(f"![]({figdir}/genome_graph_{patient}.png)")
 
-    else:
-        print(tree_name + " was too large to be rendered. Please see summary table below. If visualisation is required, please use intermediate tree files and use software such as Figtree.")
-
+       
 if too_tall_trees != []:
     print("### Large tree summaries\n")
     print("NB: data in subtrees within this tree is not included in the summary here.")

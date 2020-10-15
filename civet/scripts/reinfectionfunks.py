@@ -87,19 +87,20 @@ def reinfection_args_to_config(args, config, defaultdict):
 def sort_into_patients(query_dict):
 
     patient_to_taxa = defaultdict(list)
-    patient_to_tree = defaultdict(list)
+    patient_to_tree = defaultdict(set)
     patient_list = set()
     
     for tax in query_dict.values():
         
         patient = tax.attribute_dict["patient"]
         patient_to_taxa[patient].append(tax)
-        patient_to_tree[patient].append(tax.tree)
+        patient_to_tree[patient].add(tax.tree)
         patient_list.add(patient)
+
 
     patient_list = list(patient_list)
 
-    return patient, patient_to_taxa, patient_to_tree
+    return patient_list, patient_to_taxa, patient_to_tree
 
 
     
