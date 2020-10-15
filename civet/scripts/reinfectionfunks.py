@@ -58,7 +58,7 @@ def configure_input_query(config):
 
 def make_patient_files(config):
 
-    path_to_dir = config["tempdir"]
+    path_to_dir = config["outdir"]
     query = config["query"]
     name_col = config["input_column"]
     patient_col = config["patient_id_col"]
