@@ -130,7 +130,10 @@ def make_summary_table(focal_patient, patient_to_taxa, tree_to_tips, full_taxon_
             if tip not in query_taxa:
                 if tip in full_taxon_dict.keys():
                     taxon_obj = full_taxon_dict[tip]
-                    adm2 = taxon_obj.attribute_dict['adm2']
+                    if adm2 in taxon_obj.attribute_dict.keys():
+                        adm2 = taxon_obj.attribute_dict['adm2']
+                    else:
+                        adm2 = "NA" 
                     if focal_adm2 == "NA" or focal_adm2 == "":
                         same_adm2 = "NA"
                     else:
