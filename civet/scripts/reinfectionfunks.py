@@ -122,15 +122,17 @@ def make_summary_table(focal_patient, patient_to_taxa, tree_to_tips, full_taxon_
         tree = taxa.tree
         tips = tree_to_tips[taxa.tree]
         focal_epiweek = taxa.epiweek
-        focal_adm2 = taxa.attribute_dict["adm2"]
-
+        if "adm2" in taxa.attribute_dict.keys():
+            focal_adm2 = taxa.attribute_dict["adm2"]
+        else:
+            focal_adm2 = "NA" 
         total_tips = len(tips) - len(query_taxa)
 
         for tip in tips:
             if tip not in query_taxa:
                 if tip in full_taxon_dict.keys():
                     taxon_obj = full_taxon_dict[tip]
-                    if adm2 in taxon_obj.attribute_dict.keys():
+                    if "adm2" in taxon_obj.attribute_dict.keys():
                         adm2 = taxon_obj.attribute_dict['adm2']
                     else:
                         adm2 = "NA" 
